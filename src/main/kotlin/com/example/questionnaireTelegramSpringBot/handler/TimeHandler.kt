@@ -1,5 +1,7 @@
-package com.example.questionnaireTelegramSpringBot
+package com.example.questionnaireTelegramSpringBot.handler
 
+import com.example.questionnaireTelegramSpringBot.BackButtonCreator
+import com.example.questionnaireTelegramSpringBot.ChatsContainer
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
@@ -13,15 +15,13 @@ class TimeHandler(
 
     fun handle(callbackQuery: CallbackQuery): EditMessageText {
         val chatId = callbackQuery.message.chatId
-        var chat = chatsContainer.chatIdChatMap[chatId]
+        var chat = chatsContainer[chatId]
         var text = "Опрос успешно добавлен"
-        if (chat == null) {
-            chat = Chat()
-            chatsContainer.chatIdChatMap[chatId] = chat
-        } else {
-            val time = callbackQuery.data.split(" ")[1]
-            if (chat.timeTimerMap[time] != null)
+        val time = callbackQuery.data.split(" ")[1]
+        if (chat.timeTimerMap[time] != null) {
                 text = "Опрос на такое время уже существует"
+        } else {
+            chat.addPoll(time)
         }
 
         val editMessageText = EditMessageText()

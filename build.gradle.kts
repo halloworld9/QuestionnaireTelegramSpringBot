@@ -31,8 +31,10 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.telegram:telegrambots-spring-boot-starter:6.7.0")
-
-
+	implementation("org.springframework:spring-web:6.0.11")
+	implementation("org.xerial:sqlite-jdbc:3.42.0.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.hibernate.orm:hibernate-community-dialects:6.2.7.Final")
 }
 
 tasks.withType<KotlinCompile> {

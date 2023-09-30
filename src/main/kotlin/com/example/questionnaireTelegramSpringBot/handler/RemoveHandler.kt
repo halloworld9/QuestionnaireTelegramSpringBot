@@ -1,5 +1,6 @@
-package com.example.questionnaireTelegramSpringBot
+package com.example.questionnaireTelegramSpringBot.handler
 
+import com.example.questionnaireTelegramSpringBot.ChatsContainer
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
@@ -14,18 +15,11 @@ class RemoveHandler(
     fun handle(callbackQuery: CallbackQuery): EditMessageText {
         val time = callbackQuery.data.split(" ")[1]
         val markup = callbackQuery.message.replyMarkup
-        val chat = container.chatIdChatMap[callbackQuery.message.chatId]
-        if (chat != null) {
-            for (i in markup.keyboard) {
-                i.removeIf { it.text == time }
-            }
-            val task = chat.timeTimerMap[time]
-            if (task != null) {
-                task.cancel()
-                timer.purge()
-            }
-            chat.timeTimerMap.remove(time)
+        val chat = container[callbackQuery.message.chatId]
+        for (i in markup.keyboard) {
+            i.removeIf { it.text == time }
         }
+        chat.stopPoll(time)
 
 
         val editMessageText = EditMessageText()

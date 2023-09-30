@@ -1,4 +1,4 @@
-package com.example.questionnaireTelegramSpringBot
+package com.example.questionnaireTelegramSpringBot.handler
 
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage

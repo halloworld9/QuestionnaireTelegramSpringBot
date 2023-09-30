@@ -1,5 +1,7 @@
-package com.example.questionnaireTelegramSpringBot
+package com.example.questionnaireTelegramSpringBot.handler
 
+import com.example.questionnaireTelegramSpringBot.BackButtonCreator
+import com.example.questionnaireTelegramSpringBot.ChatsContainer
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
@@ -14,22 +16,20 @@ final class ListHandler(
 
     fun handle(callbackQuery: CallbackQuery): EditMessageText {
         val chatId = callbackQuery.message.chatId
-        val chat = chatsContainer.chatIdChatMap[chatId]
+        val chat = chatsContainer[chatId]
         val rows = ArrayList<List<InlineKeyboardButton>>()
         var row = ArrayList<InlineKeyboardButton>()
-        if (chat != null) {
-            for ((index, i) in chat.timeTimerMap.keys.asSequence().sorted().withIndex()) {
-                if (index % 4 == 0 && index != 0) {
-                    rows.add(row)
-                    row = ArrayList()
-                }
-                val button = InlineKeyboardButton()
-                button.text = i
-                button.callbackData = "/remove $i"
-                row.add(button)
+        for ((index, i) in chat.timeTimerMap.keys.asSequence().sorted().withIndex()) {
+            if (index % 4 == 0 && index != 0) {
+                rows.add(row)
+                row = ArrayList()
             }
-            rows.add(row)
+            val button = InlineKeyboardButton()
+            button.text = i
+            button.callbackData = "/remove $i"
+            row.add(button)
         }
+        rows.add(row)
 
         rows.add(listOf(buttonCreator.createBackButton("/start")))
 
